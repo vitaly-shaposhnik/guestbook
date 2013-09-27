@@ -8,47 +8,54 @@
 <!--        <script src="/lib/jquery/jquery-1.10.1.min.js"></script>-->
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css">
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap-theme.min.css">
+
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
         <!-- Latest compiled and minified JavaScript -->
         <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/css/style.css">
     </head>
 
     <body>
-        <?php
-        if (!empty($_POST['message'])) {
-            $comment = new Comment($_POST['message']);
-            print '<span style="color:green">' . $comment->save() . '</span>';
-            unset($_POST['message']);
-        }
-        ?>
+        <div id="main">
+            <h1>Гостевая книга</h1>
 
-        <form class="well span8" method="POST" action="">
-            <div class="row">
-                <div class="span5">
-                    <label>Message</label>
-                    <textarea name="message" id="message" class="input-xlarge span5" rows="10"></textarea>
-                </div>
+            <?php
+            use \Comment\Comment;
+            if (!empty($_POST['message'])) {
+                $comment = new Comment($_POST['message']);
+                print '<div class="alert alert-success"> <a class="close" data-dismiss="alert" href="#">x</a>' . $comment->save() . '</div>';
+                unset($_POST);
+            }?>
 
-                <button type="reset" class="btn btn-primary pull-right">Отмена</button>
-                <button type="submit" class="btn btn-primary pull-right">Добавить комментарий</button>
-            </div>
-        </form>
-
-        <div>
-            <h3>Все комментарии</h3>
-            <?php $comments = Comment::getData();
-            if ($comments):?>
-                <?foreach ($comments as $comment):?>
-                    <div class="comment-item" style="clear: both;">
-                        <div class="comment-date" style="width:100%;"><?=isset($comment['date']) ? $comment['date'] : ''?></div>
-                        <div class="comment-content" style="width:100%;"><?=isset($comment['comment']) ? $comment['comment'] : ''?></div>
+            <form class="well " method="POST" action="">
+                <div class="row">
+                    <div class="span5">
+                        <label>Комментарий</label>
+                        <textarea name="message" id="message" class="input-xlarge span5" rows="3" cols="83"></textarea>
                     </div>
-                <?endforeach;?>
-            <?endif;?>
+                    <div class="span5">
+                        <button type="reset" class="btn btn-primary pull-right">Отмена</button>
+                        <button type="submit" class="btn btn-primary pull-right">Добавить комментарий</button>
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <h3>Все комментарии</h3>
+                <div class="well">
+                    <?php $comments = Comment::getData();
+                    if (!empty($comments)): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="comment-item well">
+                                <div class="comment-date"><?=isset($comment['date']) ? $comment['date'] : ''?></div>
+                                <div class="comment-content"><?=isset($comment['comment']) ? $comment['comment'] : ''?></div>
+                            </div>
+                        <?php endforeach ?>
+                    <?php else: ?>
+                        Нет комментариев
+                    <?php endif ?>
+                </div>
+            </div>
         </div>
     </body>
 
